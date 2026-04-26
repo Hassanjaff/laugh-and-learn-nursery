@@ -26,6 +26,8 @@ import {
   Mail,
   MessageCircle,
 } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 const HERO_IMAGE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663599595198/5HvTohq9TVSbheMwyMMgPc/hero_banner-M6HQqevz9Q4BX8xqVpFWoU.webp";
 const ACTIVITIES_IMAGE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663599595198/5HvTohq9TVSbheMwyMMgPc/activities_banner-ktjn6SgarkUsa9HJrXXiWC.webp";
@@ -50,6 +52,7 @@ const stagger = {
 function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -99,12 +102,29 @@ function NavBar() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
-            className="ml-3 px-5 py-2.5 rounded-full bg-[oklch(0.62_0.14_162)] text-white font-display font-semibold text-sm hover:bg-[oklch(0.55_0.16_162)] transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-          >
-            Enroll Now
-          </a>
+          {user ? (
+            <div className="ml-3 flex items-center gap-2">
+              <a
+                href="/admin"
+                className="px-5 py-2.5 rounded-full bg-[oklch(0.88_0.08_290)] text-[oklch(0.35_0.12_290)] font-display font-semibold text-sm hover:bg-[oklch(0.82_0.10_290)] transition-all duration-200"
+              >
+                Admin
+              </a>
+              <button
+                onClick={logout}
+                className="px-5 py-2.5 rounded-full bg-gray-200 text-gray-700 font-display font-semibold text-sm hover:bg-gray-300 transition-all duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <a
+              href={getLoginUrl()}
+              className="ml-3 px-5 py-2.5 rounded-full bg-[oklch(0.62_0.14_162)] text-white font-display font-semibold text-sm hover:bg-[oklch(0.55_0.16_162)] transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            >
+              Enroll Now
+            </a>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -133,13 +153,34 @@ function NavBar() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
-            onClick={() => setMenuOpen(false)}
-            className="block mt-3 py-3 px-4 rounded-xl bg-[oklch(0.62_0.14_162)] text-white font-display font-semibold text-center"
-          >
-            Enroll Now
-          </a>
+          {user ? (
+            <div className="space-y-2 mt-3 border-t border-gray-200 pt-3">
+              <a
+                href="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="block py-3 px-4 rounded-xl bg-[oklch(0.88_0.08_290)] text-[oklch(0.35_0.12_290)] font-display font-semibold text-center"
+              >
+                Admin
+              </a>
+              <button
+                onClick={() => {
+                  logout();
+                  setMenuOpen(false);
+                }}
+                className="block w-full py-3 px-4 rounded-xl bg-gray-200 text-gray-700 font-display font-semibold text-center"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <a
+              href={getLoginUrl()}
+              onClick={() => setMenuOpen(false)}
+              className="block mt-3 py-3 px-4 rounded-xl bg-[oklch(0.62_0.14_162)] text-white font-display font-semibold text-center"
+            >
+              Enroll Now
+            </a>
+          )}
         </motion.div>
       )}
     </nav>
@@ -695,7 +736,7 @@ function TestimonialsSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
               className="card-hover rounded-3xl p-6 bg-white shadow-md border-t-4"
-              style={{ borderTopColor: t.color.replace("oklch(", "oklch(").replace(")", ")") }}
+              style={{ borderTopColor: t.color }}
             >
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: t.rating }).map((_, s) => (
