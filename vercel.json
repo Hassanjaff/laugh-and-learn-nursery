@@ -3,8 +3,8 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "vite",
-  "outputDirectory": "dist",
-  "public": false,
+  "outputDirectory": "dist/public",
+  "public": true,
   "env": {
     "NODE_ENV": "production"
   },
